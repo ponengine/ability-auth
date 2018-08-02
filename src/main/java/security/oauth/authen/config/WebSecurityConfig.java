@@ -12,13 +12,12 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
-
 import javax.sql.DataSource;
 
 @Configuration
 @Order(100)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
 
     @Override
     @Bean
@@ -38,11 +37,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-            .antMatchers("/h2-console/**");
+            .antMatchers("/h2-console/**","/login");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	  	
         // @formatter:off
         http.authorizeRequests()
             .anyRequest().authenticated()
@@ -59,4 +59,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authoritiesByUsernameQuery("select username,authority from authorities where username=?")
             .passwordEncoder(passwordEncoder());
     }
+    
+   
 }
