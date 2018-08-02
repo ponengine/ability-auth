@@ -36,9 +36,12 @@ import security.oauth.authen.entity.Authorities;
 import security.oauth.authen.entity.DateAndTime;
 import security.oauth.authen.entity.UserInfo;
 import security.oauth.authen.entity.Users;
+import security.oauth.authen.model.Email;
 import security.oauth.authen.repository.UserInfoRepository;
 import security.oauth.authen.repository.UserRepository;
+import security.oauth.authen.service.EmailService;
 import security.oauth.authen.service.UserService;
+import security.oauth.authen.template.EmailTemplate;
 import security.oauth.authen.util.Helper;
 
 import java.sql.Timestamp;
@@ -59,8 +62,8 @@ public class LoginResource {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-//    @Autowired
-//    private EmailService emailService;
+    @Autowired
+    private EmailService emailService;
 
 //    @Autowired
 //    private RecaptchaService recaptchaservice;
@@ -140,23 +143,23 @@ public class LoginResource {
         ar.setUsername(userinfo.getUsers().getUsername());
         userinfo.setAuthorities(ar);
         userinforepository.save(userinfo);
-        String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort() + "/api/login/confirm?token=" + userinfo.getUsers().getConfirmationToken();
+        String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort() + "/api/resource/confirm?token=" + userinfo.getUsers().getConfirmationToken();
         String from = "OreoMaster";
         String to = userinfo.getUsers().getUsername();
         String subject = "Meeting Oreo";
 
-//        EmailTemplate template = new EmailTemplate("email.html");
+        EmailTemplate template = new EmailTemplate("email.html");
 
         Map<String, String> replacements = new HashMap<String, String>();
         replacements.put("user", userinfo.getUsers().getUsername());
         replacements.put("today", String.valueOf(new Date()));
         replacements.put("verify", appUrl);
 
-//        String message = template.getTemplate(replacements);
-//
-//        Email email = new Email(from, to, subject, message);
-//        email.setHtml(true);
-//        emailService.send(email);
+        String message = template.getTemplate(replacements);
+
+        Email email = new Email(from, to, subject, message);
+        email.setHtml(true);
+        emailService.send(email);
         RestTemplate rt = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
