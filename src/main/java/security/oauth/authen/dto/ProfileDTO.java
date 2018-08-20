@@ -10,4 +10,5 @@ public class ProfileDTO {
 	private String username;
 	private String phone;
 	private String otp;
+	private String password;
 }

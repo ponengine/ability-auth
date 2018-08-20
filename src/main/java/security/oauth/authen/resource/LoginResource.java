@@ -35,7 +35,6 @@ import security.oauth.authen.domain.BaseRestApi;
 import security.oauth.authen.dto.LoginDTO;
 import security.oauth.authen.dto.ProfileDTO;
 import security.oauth.authen.entity.Authorities;
-import security.oauth.authen.entity.DateAndTime;
 import security.oauth.authen.entity.PhoneAuthen;
 import security.oauth.authen.entity.UserInfo;
 import security.oauth.authen.entity.Users;
@@ -126,9 +125,10 @@ public class LoginResource {
     	 BaseRestApi brapi = new BaseRestApi();
     	 BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
     	 LocalDate ld = LocalDate.now();
-         LocalTime lt = LocalTime.now().plusMinutes(5);
+         LocalTime lt = LocalTime.now().plusMinutes(10);
     	 PhoneAuthen phoneauthen = new PhoneAuthen();
     	 PhoneAuthen checkphone =phoneauthenrepository.findByPhone(phoneprofile.getPhone());
+    	 if(checkphone!=null){
          if(!checkphone.isEnabled()){
         	 checkphone.setPhone(phoneprofile.getPhone());
         	 checkphone.setTimeExpire(lt);
@@ -144,6 +144,7 @@ public class LoginResource {
                  brapi.setResponse(resp);
                  return brapi;
          }
+             }
          phoneauthen.setPhone(phoneprofile.getPhone());
          phoneauthen.setTimeExpire(lt);
          phoneauthen.setDateExpire(ld);
@@ -158,7 +159,7 @@ public class LoginResource {
     	Map<String, Object> model = new HashMap<>();
     	BaseRestApi brapi = new BaseRestApi();
         BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
-        if(phoneprofile.getOtp() ==null){
+        if(phoneprofile.getOtp().isEmpty()){
         	resp.setErrorMessage(Helper.getMessage("otp_message"));
         	brapi.setResponse(resp);
         	brapi.setSuccess(false);	
@@ -179,18 +180,20 @@ public class LoginResource {
         	brapi.setSuccess(false);	
         	return brapi;
         }
-        
+        phoneauthen.setEnabled(true);
+        phoneauthenrepository.save(phoneauthen);
         UserInfo userinfo = new UserInfo();
         userinfo.setPhone(phoneprofile.getPhone());
         userinforepository.save(userinfo);
         model.put("phone" ,userinfo.getPhone());
         resp.setData(model);
+        brapi.setResponse(resp);
         brapi.setSuccess(true);	
         return brapi;
     }
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     //,@RequestParam(name="g-recaptcha-response") String recaptchaResponse
-    public BaseRestApi createNewUser(@RequestBody @Valid UserInfo userinfo, BindingResult bindingResult, ServletRequest request) {
+    public BaseRestApi createNewUser(@RequestBody @Valid ProfileDTO profile, BindingResult bindingResult, ServletRequest request) {
 //		String ip = request.getRemoteAddr();
 //		  String captchaVerifyMessage = 
 //				  recaptchaservice.verifyRecaptcha(ip, recaptchaResponse);
@@ -199,12 +202,13 @@ public class LoginResource {
 //		    response.put("message", captchaVerifyMessage);
 //		    System.out.println("Error");
 //		  }
-
+    	 LocalDate ld = LocalDate.now();
+         LocalTime lt = LocalTime.now();
         BaseRestApi brapi = new BaseRestApi();
         BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
         String uri = env.getProperty("base.wallet") + "/user/add";
-        Timestamp stamp = new Timestamp(System.currentTimeMillis());
-        Users userExists = userRepository.findByUsername(userinfo.getUsers().getUsername());
+      
+        Users userExists = userRepository.findByUsername(profile.getUsername());
         if (userExists != null) {
             brapi.setSuccess(false);
             resp.setErrorMessage(Helper.getMessage("user_already_in_system"));
@@ -212,18 +216,25 @@ public class LoginResource {
             return brapi;
 
         }
-        UserInfo userregis=userinforepository.findByPhone(userinfo.getPhone());
-        userregis.getUsers().setPassword(bCryptPasswordEncoder.encode(userinfo.getUsers().getPassword()));
-        userregis.getUsers().setEnabled(true);
+   
+        UserInfo userregis=userinforepository.findByPhone(profile.getPhone());
+
+        Users setUsers = new Users();
+        setUsers.setUsername(profile.getUsername());
+        setUsers.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
+        setUsers.setEnabled(true);
+        userregis.setUsers(setUsers);
         //userinfo.getUsers().setConfirmationToken(UUID.randomUUID().toString());
-        DateAndTime dt = new DateAndTime();
-        dt.setCreateDate(stamp);
-        userregis.setDateandtime(dt);
+        userregis.setCreateDate(ld);
+        userregis.setCreateTime(lt);
+        userregis.setUserType(UserType.ACTIVE.toString());
         Authorities ar = new Authorities();
         ar.setAuthority("ROLE_USER");
-        ar.setUsername(userinfo.getUsers().getUsername());
+        ar.setUsername(profile.getUsername());
         userregis.setAuthorities(ar);
+
         userinforepository.save(userregis);
+
 //        String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort() + "/api/login/confirm?token=" + userinfo.getUsers().getConfirmationToken();
 //        String from = "OreoMaster";
 //        String to = userinfo.getUsers().getUsername();

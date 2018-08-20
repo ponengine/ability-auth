@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,8 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+import security.oauth.authen.config.LocalDateAttributeConverter;
+import security.oauth.authen.config.LocalTimeAttributeConverter;
 
 @Getter
 @Setter
@@ -27,9 +30,16 @@ public class UserInfo implements Serializable{
 	@GeneratedValue
 	@Column(name="userinfo_id")
 	private Long id;
-	private String citicenid;
 	private String phone;
 	private String userType;
+	@Convert(converter=LocalDateAttributeConverter.class)
+	private LocalDate createDate;
+	@Convert(converter=LocalTimeAttributeConverter.class)
+	private LocalTime createTime;
+	@Convert(converter=LocalDateAttributeConverter.class)
+	private LocalDate updateDate;
+	@Convert(converter=LocalTimeAttributeConverter.class)
+	private LocalTime updateTime;
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "w_user_id")
@@ -39,9 +49,6 @@ public class UserInfo implements Serializable{
 	@JoinColumn(name = "w_authorities_id")
 	private Authorities authorities;
 	
-	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name = "w_dateandtime_id")
-	private DateAndTime dateandtime;
 	
 
 }
