@@ -46,7 +46,7 @@ public class TransactionResource {
         	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
         	  profile.setLastName(userinfo.getUserinfo().getLastName());
         	  profile.setUsername(userinfo.getUsername());
-        	  profile.setPhoneNumber(userinfo.getUserinfo().getPhoneNumber());
+        	  profile.setPhone(userinfo.getUserinfo().getPhone());
         	  profile.setAddress(userinfo.getUserinfo().getAddress());
         	  listreturn.add(profile);
           }
@@ -67,7 +67,7 @@ public class TransactionResource {
         	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
         	  profile.setLastName(userinfo.getUserinfo().getLastName());
         	  profile.setUsername(userinfo.getUsername());
-        	  profile.setPhoneNumber(userinfo.getUserinfo().getPhoneNumber());
+        	  profile.setPhone(userinfo.getUserinfo().getPhone());
         	  profile.setAddress(userinfo.getUserinfo().getAddress());
         	  listreturn.add(profile);
           }
@@ -89,7 +89,7 @@ public class TransactionResource {
         	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
         	  profile.setLastName(userinfo.getUserinfo().getLastName());
         	  profile.setUsername(userinfo.getUserinfo().getUsers().getUsername());
-        	  profile.setPhoneNumber(userinfo.getUserinfo().getPhoneNumber());
+        	  profile.setPhone(userinfo.getUserinfo().getPhone());
         	  profile.setAddress(userinfo.getUserinfo().getAddress());
         	  listreturn.add(profile);
         	  }

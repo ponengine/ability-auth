@@ -1,6 +1,7 @@
 package security.oauth.authen.service;
 
 
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,8 +24,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class UserService {
-	static String CLIENT_ID = "client";
-    static String SECRET = "secret";
+	static String CLIENT_ID = "acme";
+    static String SECRET = "acmesecret";
+    static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	static SecureRandom rnd = new SecureRandom();
     @Autowired
     private Environment env;
      
@@ -43,6 +46,13 @@ public class UserService {
 		httpHeaders.add(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuthorization);
 		return httpHeaders;
 	}
+    
+	public String randomString( int len ){
+		   StringBuilder sb = new StringBuilder( len );
+		   for( int i = 0; i < len; i++ ) 
+		      sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+		   return sb.toString();
+		}
     
    
 }

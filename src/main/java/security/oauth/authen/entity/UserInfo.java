@@ -29,7 +29,8 @@ public class UserInfo implements Serializable{
 	private String lastName;
 	private String citicenid;
 	private String address;
-	private String phoneNumber;
+	private String phone;
+	private String userType;
 	
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "user_id")
@@ -42,4 +43,8 @@ public class UserInfo implements Serializable{
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "dateandtime_id")
 	private DateAndTime dateandtime;
+	
+//	@OneToOne(cascade=CascadeType.ALL)
+//	@JoinColumn(name = "phone_id")
+//	private PhoneAuthen phone_authen;
 }

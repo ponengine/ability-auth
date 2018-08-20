@@ -1,10 +1,14 @@
 package security.oauth.authen.util;
 
+import java.security.Principal;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.i18n.LocaleContextHolder;
+
+import security.oauth.authen.entity.Users;
+import security.oauth.authen.repository.UserRepository;
 
 
 
@@ -47,5 +51,14 @@ public class Helper {
             return new Locale("en");
         }
     }
+    
+    public static Users currentUser(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        if (principal == null)
+          return null;
+
+        UserRepository userRepo = SpringContextUtil.getApplicationContext().getBean(UserRepository.class);
+        return userRepo.findByUsername(principal.getName());
+      }
 
 }

@@ -7,4 +7,5 @@ import security.oauth.authen.entity.UserInfo;
 
 public interface UserInfoRepository extends CrudRepository<UserInfo, Long>{
 
+	UserInfo findByPhone(String phone);
 }
