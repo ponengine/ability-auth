@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,31 +21,27 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name="w_user_info")
 public class UserInfo implements Serializable{
 	@Id
 	@GeneratedValue
 	@Column(name="userinfo_id")
 	private Long id;
-	private String firstName;
-	private String lastName;
 	private String citicenid;
-	private String address;
 	private String phone;
 	private String userType;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "w_user_id")
 	private Users users;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name = "authorities_id")
+	@JoinColumn(name = "w_authorities_id")
 	private Authorities authorities;
 	
 	@OneToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name = "dateandtime_id")
+	@JoinColumn(name = "w_dateandtime_id")
 	private DateAndTime dateandtime;
 	
-//	@OneToOne(cascade=CascadeType.ALL)
-//	@JoinColumn(name = "phone_id")
-//	private PhoneAuthen phone_authen;
+
 }

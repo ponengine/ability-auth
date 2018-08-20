@@ -43,11 +43,11 @@ public class TransactionResource {
           List<ProfileDTO> listreturn = new ArrayList<>();
           for(Users userinfo:list){
         	  ProfileDTO profile = new ProfileDTO();
-        	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
-        	  profile.setLastName(userinfo.getUserinfo().getLastName());
+//        	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
+//        	  profile.setLastName(userinfo.getUserinfo().getLastName());
         	  profile.setUsername(userinfo.getUsername());
         	  profile.setPhone(userinfo.getUserinfo().getPhone());
-        	  profile.setAddress(userinfo.getUserinfo().getAddress());
+//        	  profile.setAddress(userinfo.getUserinfo().getAddress());
         	  listreturn.add(profile);
           }
           resp.setData(listreturn);
@@ -64,11 +64,11 @@ public class TransactionResource {
           List<ProfileDTO> listreturn = new ArrayList<>();
           for(Users userinfo:list){
         	  ProfileDTO profile = new ProfileDTO();
-        	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
-        	  profile.setLastName(userinfo.getUserinfo().getLastName());
+//        	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
+//        	  profile.setLastName(userinfo.getUserinfo().getLastName());
         	  profile.setUsername(userinfo.getUsername());
         	  profile.setPhone(userinfo.getUserinfo().getPhone());
-        	  profile.setAddress(userinfo.getUserinfo().getAddress());
+//        	  profile.setAddress(userinfo.getUserinfo().getAddress());
         	  listreturn.add(profile);
           }
           resp.setData(listreturn);
@@ -86,11 +86,11 @@ public class TransactionResource {
           for(DateAndTime userinfo:list){
         	  if(userinfo.getUserinfo().getUsers().isEnabled()){
         	  ProfileDTO profile = new ProfileDTO();
-        	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
-        	  profile.setLastName(userinfo.getUserinfo().getLastName());
+//        	  profile.setFirstName(userinfo.getUserinfo().getFirstName());
+//        	  profile.setLastName(userinfo.getUserinfo().getLastName());
         	  profile.setUsername(userinfo.getUserinfo().getUsers().getUsername());
         	  profile.setPhone(userinfo.getUserinfo().getPhone());
-        	  profile.setAddress(userinfo.getUserinfo().getAddress());
+//        	  profile.setAddress(userinfo.getUserinfo().getAddress());
         	  listreturn.add(profile);
         	  }
           }

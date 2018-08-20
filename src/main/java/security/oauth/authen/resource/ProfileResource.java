@@ -36,12 +36,12 @@ public class ProfileResource {
              brapi.setResponse(resp);
             return brapi;
             }
-		if(profile.getFirstName().length()!=0){
-			user.getUserinfo().setFirstName(profile.getFirstName());
-		}
-		if(profile.getLastName().length()!=0){
-			user.getUserinfo().setLastName(profile.getLastName());
-		}
+//		if(profile.getFirstName().length()!=0){
+//			user.getUserinfo().setFirstName(profile.getFirstName());
+//		}
+//		if(profile.getLastName().length()!=0){
+//			user.getUserinfo().setLastName(profile.getLastName());
+//		}
 		if(profile.getPhone().length()!=0){
 			user.getUserinfo().setPhone(profile.getPhone());
 		}
@@ -61,11 +61,11 @@ public class ProfileResource {
             return brapi;
             }
 		 ProfileDTO profile = new ProfileDTO();
-		 profile.setFirstName(user.getUserinfo().getFirstName());
-		 profile.setLastName(user.getUserinfo().getLastName());
+//		 profile.setFirstName(user.getUserinfo().getFirstName());
+//		 profile.setLastName(user.getUserinfo().getLastName());
 		 profile.setUsername(user.getUsername());
 		 profile.setPhone(user.getUserinfo().getPhone());
-   	  	 profile.setAddress(user.getUserinfo().getAddress());
+//   	  	 profile.setAddress(user.getUserinfo().getAddress());
    	  	 
 		 resp.setData(profile);
 		 brapi.setResponse(resp);

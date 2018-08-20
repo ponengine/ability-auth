@@ -1,11 +1,11 @@
 package security.oauth.authen.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
+
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
-import javax.persistence.Converter;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,7 +17,7 @@ import security.oauth.authen.config.LocalTimeAttributeConverter;
 @Getter
 @Setter
 @Entity
-@Table(name="phone_authen")
+@Table(name="w_phone_authen")
 public class PhoneAuthen {
 	@Id
 	@GeneratedValue
@@ -29,7 +29,7 @@ public class PhoneAuthen {
 	private LocalDate dateExpire;
 	@Convert(converter=LocalTimeAttributeConverter.class)
 	private LocalTime timeExpire;
+	private boolean enabled=false;
 	
-//	@OneToOne(mappedBy="phone_authen")
-//	private UserInfo userinfo;
+
 }

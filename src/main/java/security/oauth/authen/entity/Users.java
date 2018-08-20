@@ -19,7 +19,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="users")
+@Table(name="w_users")
 public class Users implements Serializable{
 	@Id
 	@GeneratedValue

@@ -124,11 +124,26 @@ public class LoginResource {
     @PostMapping("/genotp")
     public BaseRestApi genByPhone(@RequestBody ProfileDTO phoneprofile){
     	 BaseRestApi brapi = new BaseRestApi();
-    	 PhoneAuthen phoneauthen = new PhoneAuthen();
-         BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
-         LocalDate ld = LocalDate.now();
+    	 BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
+    	 LocalDate ld = LocalDate.now();
          LocalTime lt = LocalTime.now().plusMinutes(5);
-         Date d= new Date();
+    	 PhoneAuthen phoneauthen = new PhoneAuthen();
+    	 PhoneAuthen checkphone =phoneauthenrepository.findByPhone(phoneprofile.getPhone());
+         if(!checkphone.isEnabled()){
+        	 checkphone.setPhone(phoneprofile.getPhone());
+        	 checkphone.setTimeExpire(lt);
+        	 checkphone.setDateExpire(ld);
+        	 checkphone.setRandomNum(userservice.randomString(6));
+             phoneauthenrepository.save(checkphone);
+             brapi.setSuccess(true);
+             return brapi;
+             }
+             if(checkphone.isEnabled()){
+            	 brapi.setSuccess(false);
+                 resp.setErrorMessage(Helper.getMessage("user_already_in_system"));
+                 brapi.setResponse(resp);
+                 return brapi;
+         }
          phoneauthen.setPhone(phoneprofile.getPhone());
          phoneauthen.setTimeExpire(lt);
          phoneauthen.setDateExpire(ld);
@@ -150,22 +165,21 @@ public class LoginResource {
         	return brapi;
         }
         PhoneAuthen checkphone =phoneauthenrepository.findByPhone(phoneprofile.getPhone());
-        if(checkphone!=null){
-        	resp.setErrorMessage(Helper.getMessage("user_already_in_system"));
+        if(checkphone==null){
+        	resp.setErrorMessage(Helper.getMessage("user_not_found"));
         	brapi.setResponse(resp);
         	brapi.setSuccess(false);	
         	return brapi;
         }
 
-        
         PhoneAuthen phoneauthen =phoneauthenrepository.findByPhoneAndRandomNum(phoneprofile.getPhone(),phoneprofile.getOtp());
-        
         if(phoneauthen==null){
         	resp.setErrorMessage(Helper.getMessage("otp_recheck"));
         	brapi.setResponse(resp);
         	brapi.setSuccess(false);	
         	return brapi;
         }
+        
         UserInfo userinfo = new UserInfo();
         userinfo.setPhone(phoneprofile.getPhone());
         userinforepository.save(userinfo);
