@@ -24,8 +24,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class UserService {
-	static String CLIENT_ID = "acme";
-    static String SECRET = "acmesecret";
+	static String CLIENT_ID = "client";
+    static String SECRET = "secret";
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	static SecureRandom rnd = new SecureRandom();
     @Autowired

@@ -73,6 +73,7 @@ public class LoginResource {
     public BaseRestApi gettoken(@RequestBody LoginDTO loginDTO) throws JsonProcessingException {
         BaseRestApi brapi = new BaseRestApi();
         BaseResponse<Map<String, String>> resp = new BaseResponse<Map<String, String>>();
+       
         Users user = userRepository.findByUsername(loginDTO.getUsername());
         if (user == null) {
             brapi.setSuccess(false);
@@ -92,7 +93,7 @@ public class LoginResource {
              brapi.setResponse(resp);
              return brapi;
         }
-
+        
         String token = userservice.getToken(loginDTO.getUsername(), loginDTO.getPassword()).getValue();
         Map<String, String> gettoken = new HashMap<String, String>();
         gettoken.put("token", "Bearer " + token);
