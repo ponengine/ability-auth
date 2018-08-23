@@ -204,7 +204,7 @@ public class LoginResource {
         userregis.setCreateTime(lt);
         userregis.setUserType(UserType.ACTIVE.toString());
         Authorities ar = new Authorities();
-        ar.setAuthority("ROLE_USER");
+        ar.setAuthority("ROLE_CUSTOMER");
         ar.setUsername(profile.getUsername());
         userregis.setAuthorities(ar);
         userinforepository.save(userregis);
