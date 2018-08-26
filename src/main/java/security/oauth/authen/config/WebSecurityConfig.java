@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,11 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
     	  	
         // @formatter:off
-        http.authorizeRequests()
-        	.antMatchers(HttpMethod.OPTIONS, "/oauth/token").permitAll()
-            .anyRequest().authenticated()
-            .and().formLogin()
-            .and().csrf().disable();
+    	 http.authorizeRequests()
+         .anyRequest().authenticated()
+         .and().formLogin()
+         .and().csrf().disable();
         // @formatter:on
     }
 

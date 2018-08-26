@@ -6,6 +6,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -177,7 +178,7 @@ public class LoginResource {
         return brapi;
     }
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public BaseRestApi createNewUser(@RequestBody @Valid ProfileDTO profile, BindingResult bindingResult, ServletRequest request) {
+    public BaseRestApi createNewUser(@RequestBody @Valid ProfileDTO profile, BindingResult bindingResult, ServletRequest request) throws JSONException {
     	 LocalDate ld = LocalDate.now();
          LocalTime lt = LocalTime.now();
         BaseRestApi brapi = new BaseRestApi();
