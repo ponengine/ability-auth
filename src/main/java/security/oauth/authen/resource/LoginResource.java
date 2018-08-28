@@ -6,6 +6,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,7 @@ import java.time.LocalTime;
 @RequestMapping("/api/resource")
 public class LoginResource {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserService userservice;
 
@@ -72,6 +75,7 @@ public class LoginResource {
     }
     @PostMapping("/login")
     public BaseRestApi gettoken(@RequestBody LoginDTO loginDTO) throws JsonProcessingException {
+    	logger.info("username: {} loginby: {}",loginDTO.getUsername(),Helper.getComName());
         BaseRestApi brapi = new BaseRestApi();
         BaseResponse<Map<String, String>> resp = new BaseResponse<Map<String, String>>();
        

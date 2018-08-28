@@ -1,5 +1,7 @@
 package security.oauth.authen.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.Principal;
 import java.util.Locale;
 
@@ -60,5 +62,21 @@ public class Helper {
         UserRepository userRepo = SpringContextUtil.getApplicationContext().getBean(UserRepository.class);
         return userRepo.findByUsername(principal.getName());
       }
+    
+    public static String getComName(){
+    	String hostname = "Unknown";
+		try
+		{
+		    InetAddress addr;
+		    addr = InetAddress.getLocalHost();
+		    hostname = addr.getHostName();
+		 
+		}
+		catch (UnknownHostException ex)
+		{
+		    System.out.println("Hostname can not be resolved");
+		}
+		return hostname;
+    }
 
 }
