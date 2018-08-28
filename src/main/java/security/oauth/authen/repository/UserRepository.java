@@ -15,6 +15,7 @@ public interface UserRepository extends CrudRepository<Users, Long>{
 	Users findByConfirmationToken(String confirmationToken);
 	List<Users> findByEnabled(boolean status);
 	
+	
 
 	
 }

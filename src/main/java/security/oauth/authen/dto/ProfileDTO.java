@@ -11,4 +11,5 @@ public class ProfileDTO {
 	private String phone;
 	private String otp;
 	private String password;
+	private String role;
 }

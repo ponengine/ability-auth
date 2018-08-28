@@ -198,8 +198,8 @@ public class LoginResource {
 
         }
    
-        UserInfo userregis=userinforepository.findByPhone(profile.getPhone());
-
+        //UserInfo userregis=userinforepository.findByPhone(profile.getPhone());
+        UserInfo userregis = new UserInfo();
         Users setUsers = new Users();
         setUsers.setUsername(profile.getUsername());
         setUsers.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
