@@ -37,7 +37,6 @@ import security.oauth.authen.entity.Users;
 import security.oauth.authen.repository.PhoneAuthenRepository;
 import security.oauth.authen.repository.UserInfoRepository;
 import security.oauth.authen.repository.UserRepository;
-import security.oauth.authen.service.EmailService;
 import security.oauth.authen.service.UserService;
 import security.oauth.authen.util.Helper;
 import java.time.LocalDate;
@@ -62,9 +61,6 @@ public class LoginResource {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    private EmailService emailService;
 
     @Autowired
     private Environment env;
@@ -203,7 +199,6 @@ public class LoginResource {
         Users setUsers = new Users();
         setUsers.setUsername(profile.getUsername());
         setUsers.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
-        setUsers.setEnabled(true);
         userregis.setUsers(setUsers);
         userregis.setCreateDate(ld);
         userregis.setCreateTime(lt);
