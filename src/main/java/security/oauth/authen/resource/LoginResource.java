@@ -75,7 +75,7 @@ public class LoginResource {
     }
     @PostMapping("/login")
     public BaseRestApi gettoken(@RequestBody LoginDTO loginDTO) throws JsonProcessingException {
-    	logger.info("username: {} loginby: {}",loginDTO.getUsername(),Helper.getComName());
+    	logger.info("username: {} ",loginDTO.getUsername());
         BaseRestApi brapi = new BaseRestApi();
         BaseResponse<Map<String, String>> resp = new BaseResponse<Map<String, String>>();
        
