@@ -27,7 +27,8 @@ public class Users implements Serializable{
 	private Long id;
 	private String username;
 	private String password;
-  private String token;
+	private String token;
+	private boolean enabled;
 	@OneToOne(mappedBy="users")
 	private UserInfo userinfo;
 

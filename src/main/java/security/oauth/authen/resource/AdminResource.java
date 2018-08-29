@@ -73,8 +73,8 @@ public class AdminResource {
 	             brapi.setResponse(resp);
 	            return brapi;
 	           }
-			 String userType =profile.getUserType();
-			 user.getUserinfo().setUserType(userType);
+			
+			 //user.getUserinfo().setUserType(userType);
 			 brapi.setSuccess(true);
 			 return brapi;
 		}
