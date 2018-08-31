@@ -2,19 +2,32 @@ package security.oauth.authen.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.context.i18n.LocaleContextHolder;
 
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import security.oauth.authen.domain.BaseRestApi;
 import security.oauth.authen.entity.Users;
 import security.oauth.authen.repository.UserRepository;
 
 
 
 public class Helper {
+
 	public static String currentLocale() {
         Locale currentLocale = LocaleContextHolder.getLocale();
         if (currentLocale.getLanguage().equals("th")) {
@@ -78,5 +91,6 @@ public class Helper {
 		}
 		return hostname;
     }
+    
 
 }
