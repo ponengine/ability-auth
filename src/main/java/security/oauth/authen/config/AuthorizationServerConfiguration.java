@@ -23,6 +23,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Qualifier("authenticationManagerBean")
     private AuthenticationManager authenticationManager;
 
+
+    
     @Qualifier("dataSource")
     @Autowired
     private DataSource dataSource;
@@ -53,6 +55,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
             .accessTokenConverter(accessTokenConverter());
     }
 
+    
+    
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer

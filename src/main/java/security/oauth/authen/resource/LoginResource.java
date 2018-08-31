@@ -179,8 +179,8 @@ public class LoginResource {
     }
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public BaseRestApi createNewUser(@RequestBody @Valid ProfileDTO profile, BindingResult bindingResult, ServletRequest request) throws JSONException {
-    	 LocalDate ld = LocalDate.now();
-         LocalTime lt = LocalTime.now();
+    	LocalDate ld = LocalDate.now();
+        LocalTime lt = LocalTime.now();
         BaseRestApi brapi = new BaseRestApi();
         BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
         String uri = env.getProperty("base.wallet") + "/user/adduser";
@@ -198,6 +198,7 @@ public class LoginResource {
         UserInfo userregis = new UserInfo();
         Users setUsers = new Users();
         setUsers.setUsername(profile.getUsername());
+        setUsers.setEnabled(true);
         setUsers.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
         userregis.setUsers(setUsers);
         userregis.setCreateDate(ld);

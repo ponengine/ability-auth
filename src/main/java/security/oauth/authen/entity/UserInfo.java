@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -50,6 +51,8 @@ public class UserInfo implements Serializable{
 	@JoinColumn(name = "w_authorities_id")
 	private Authorities authorities;
 	
+	@Transient
+	private String typetran;
 	
 
 }

@@ -21,6 +21,7 @@ import security.oauth.authen.entity.UserInfo;
 import security.oauth.authen.entity.Users;
 import security.oauth.authen.repository.UserInfoRepository;
 import security.oauth.authen.repository.UserRepository;
+import security.oauth.authen.util.Helper;
 
 
 
@@ -36,29 +37,17 @@ public class TransactionResource {
 	private UserRepository userrepository;
 
 	
-	@PostMapping("/findtransaction/userall")
-	public BaseRestApi findAll(@RequestBody UserInfo userinfo){//get type
+	@PostMapping("/findtransaction/user")
+	public BaseRestApi findAll(@RequestBody UserInfo userinfo){//get type typetran
 		  BaseRestApi brapi = new BaseRestApi();
           BaseResponse<List<ProfileDTO>> resp = new BaseResponse<List<ProfileDTO>>();
-          List<UserInfo> list = userinfoRepository.findByUserType(userinfo.getUserType());
-          List<ProfileDTO> listreturn = new ArrayList<>();
-          for(UserInfo user:list){
-        	  ProfileDTO profile = new ProfileDTO();
-        	  profile.setUsername(user.getUsers().getUsername());
-        	  profile.setPhone(user.getPhone());
-        	  profile.setRole(user.getAuthorities().getAuthority());
-        	  listreturn.add(profile);
+          List<UserInfo> list = new ArrayList<>();
+          if("today".equalsIgnoreCase(userinfo.getTypetran())){
+        	  list = userinfoRepository.findByUserTypeToday(userinfo.getUserType());
+          }else{
+        	  list = userinfoRepository.findByUserType(userinfo.getUserType());
           }
-          resp.setData(listreturn);
-          brapi.setResponse(resp);
-          brapi.setSuccess(true);
-          return brapi;
-	}
-	@PostMapping("/findtransaction/usertoday")
-	public BaseRestApi findToDay(@RequestBody UserInfo userinfo){//get type
-		  BaseRestApi brapi = new BaseRestApi();
-          BaseResponse<List<ProfileDTO>> resp = new BaseResponse<List<ProfileDTO>>();
-          List<UserInfo> list = userinfoRepository.findByUserTypeToday(userinfo.getUserType());
+          
           List<ProfileDTO> listreturn = new ArrayList<>();
           for(UserInfo user:list){
         	  ProfileDTO profile = new ProfileDTO();
@@ -73,11 +62,24 @@ public class TransactionResource {
           return brapi;
 	}
 	
-	@GetMapping("/findtransactionuserone/phone/{phone}")
-	public BaseRestApi findOnePhone(@PathVariable("phone") String phone){
+	
+	@PostMapping("/findtransactionuserone")
+	public BaseRestApi findOnePhone(@RequestBody ProfileDTO profledto){ //username phone
 		  BaseRestApi brapi = new BaseRestApi();
           BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
-          UserInfo userinfo = userinfoRepository.findByPhone(phone);
+          UserInfo userinfo = new UserInfo();
+          if(null!=profledto.getPhone()){
+        	  userinfo= userinfoRepository.findByPhone(profledto.getPhone());
+          }else if(null!=profledto.getUsername()){
+        	  Users user = userrepository.findByUsername(profledto.getUsername());
+        	  userinfo=user.getUserinfo();
+          }else{
+        	  brapi.setSuccess(false);
+        	  resp.setErrorMessage(Helper.getMessage("user_not_found"));
+        	  brapi.setResponse(resp);
+        	  return brapi;
+          }
+          
           Map<String, Object> model =  new HashMap<>();
         	  ProfileDTO profile = new ProfileDTO();
         	  profile.setUsername(userinfo.getUsers().getUsername());
@@ -90,21 +92,6 @@ public class TransactionResource {
           return brapi;
 	}
 	
-	@GetMapping("/findtransactionuserone/username/{username}")
-	public BaseRestApi findOneUsername(@PathVariable("username") String username){
-		  BaseRestApi brapi = new BaseRestApi();
-          BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
-          Users user = userrepository.findByUsername(username);
-          Map<String, Object> model =  new HashMap<>();
-          ProfileDTO profile = new ProfileDTO();
-    	  profile.setUsername(user.getUsername());
-    	  profile.setPhone(user.getUserinfo().getPhone());
-    	  profile.setRole(user.getUserinfo().getAuthorities().getAuthority());
-          model.put("user", profile);
-          resp.setData(model);
-          brapi.setResponse(resp);
-          brapi.setSuccess(true);
-          return brapi;
-	}
+	
 
 }

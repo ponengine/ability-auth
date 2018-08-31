@@ -30,12 +30,11 @@
 		</File>
 	</Appenders>
 	<Loggers>
-		<Logger name="org.springframework.web" level="info" additivity="false">
-<!-- 			<AppenderRef ref="SpringBoot-Appender" /> -->
+		<Logger name="org.springframework.web" level="all" additivity="false">
+      <AppenderRef ref="SpringBoot-Appender" />
 			<AppenderRef ref="Console-Appender" />
 		</Logger>
-		<Logger name="security.oauth.authen.resource" level="info"
-			additivity="false">
+		<Logger name="security.oauth.authen.resource" level="info" additivity="false">
 			<AppenderRef ref="App-Appender" />
 			<AppenderRef ref="Console-Appender" />
 		</Logger>

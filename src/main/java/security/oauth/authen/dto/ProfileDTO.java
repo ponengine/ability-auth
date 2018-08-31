@@ -13,4 +13,5 @@ public class ProfileDTO {
 	private String password;
 	private String role;
 	private String userType;
+	
 }
