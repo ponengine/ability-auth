@@ -12,7 +12,9 @@ public class ResourceServiceConfiguration extends ResourceServerConfigurerAdapte
 	    // @formatter:off
 	    http.csrf().disable().authorizeRequests()
 	    // This is needed to enable swagger-ui interface.
-	    .antMatchers("/swagger-ui.html","/swagger-resources/**", "/v2/api-docs/**").permitAll();
+	    .antMatchers("/swagger-ui.html","/swagger-resources/**", "/v2/api-docs/**").permitAll()
+	    
+	    ;
 
 	  }
 }

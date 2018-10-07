@@ -1,14 +1,14 @@
 package security.oauth.authen.resource;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
-
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -22,13 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import security.oauth.authen.constant.UserType;
 import security.oauth.authen.domain.BaseResponse;
 import security.oauth.authen.domain.BaseRestApi;
@@ -38,17 +34,11 @@ import security.oauth.authen.entity.Authorities;
 import security.oauth.authen.entity.PhoneAuthen;
 import security.oauth.authen.entity.UserInfo;
 import security.oauth.authen.entity.Users;
-import security.oauth.authen.model.Email;
 import security.oauth.authen.repository.PhoneAuthenRepository;
 import security.oauth.authen.repository.UserInfoRepository;
 import security.oauth.authen.repository.UserRepository;
-import security.oauth.authen.service.EmailService;
 import security.oauth.authen.service.UserService;
-import security.oauth.authen.template.EmailTemplate;
 import security.oauth.authen.util.Helper;
-
-import java.security.SecureRandom;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -56,6 +46,7 @@ import java.time.LocalTime;
 @RequestMapping("/api/resource")
 public class LoginResource {
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private UserService userservice;
 
@@ -72,12 +63,6 @@ public class LoginResource {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private EmailService emailService;
-
-//    @Autowired
-//    private RecaptchaService recaptchaservice;
-
-    @Autowired
     private Environment env;
 
     @GetMapping("/message")
@@ -86,8 +71,10 @@ public class LoginResource {
     }
     @PostMapping("/login")
     public BaseRestApi gettoken(@RequestBody LoginDTO loginDTO) throws JsonProcessingException {
+    	logger.info("username: {} ",loginDTO.getUsername());
         BaseRestApi brapi = new BaseRestApi();
         BaseResponse<Map<String, String>> resp = new BaseResponse<Map<String, String>>();
+       
         Users user = userRepository.findByUsername(loginDTO.getUsername());
         if (user == null) {
             brapi.setSuccess(false);
@@ -107,7 +94,7 @@ public class LoginResource {
              brapi.setResponse(resp);
              return brapi;
         }
-
+        
         String token = userservice.getToken(loginDTO.getUsername(), loginDTO.getPassword()).getValue();
         Map<String, String> gettoken = new HashMap<String, String>();
         gettoken.put("token", "Bearer " + token);
@@ -150,7 +137,6 @@ public class LoginResource {
          phoneauthen.setDateExpire(ld);
          phoneauthen.setRandomNum(userservice.randomString(6));
          phoneauthenrepository.save(phoneauthen);
-//         phoneauthenrepository.insertPhone(phoneprofile.getPhoneNumber(), userservice.randomString(6), ld, lt);
          brapi.setSuccess(true);
          return brapi;
     }
@@ -192,22 +178,13 @@ public class LoginResource {
         return brapi;
     }
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    //,@RequestParam(name="g-recaptcha-response") String recaptchaResponse
-    public BaseRestApi createNewUser(@RequestBody @Valid ProfileDTO profile, BindingResult bindingResult, ServletRequest request) {
-//		String ip = request.getRemoteAddr();
-//		  String captchaVerifyMessage = 
-//				  recaptchaservice.verifyRecaptcha(ip, recaptchaResponse);
-//		  if ( StringUtils.isNotEmpty(captchaVerifyMessage)) {
-//		    Map<String, Object> response = new HashMap<>();
-//		    response.put("message", captchaVerifyMessage);
-//		    System.out.println("Error");
-//		  }
-    	 LocalDate ld = LocalDate.now();
-         LocalTime lt = LocalTime.now();
+    public BaseRestApi createNewUser(@RequestBody @Valid ProfileDTO profile, BindingResult bindingResult, ServletRequest request) throws JSONException {
+    	LocalDate ld = LocalDate.now();
+        LocalTime lt = LocalTime.now();
         BaseRestApi brapi = new BaseRestApi();
         BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
-        String uri = env.getProperty("base.wallet") + "/user/add";
-      
+        String uri = env.getProperty("base.wallet") + "/user/adduser";
+   
         Users userExists = userRepository.findByUsername(profile.getUsername());
         if (userExists != null) {
             brapi.setSuccess(false);
@@ -217,77 +194,35 @@ public class LoginResource {
 
         }
    
-        UserInfo userregis=userinforepository.findByPhone(profile.getPhone());
-
+        //UserInfo userregis=userinforepository.findByPhone(profile.getPhone());
+        UserInfo userregis = new UserInfo();
         Users setUsers = new Users();
         setUsers.setUsername(profile.getUsername());
-        setUsers.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
         setUsers.setEnabled(true);
+        setUsers.setPassword(bCryptPasswordEncoder.encode(profile.getPassword()));
         userregis.setUsers(setUsers);
-        //userinfo.getUsers().setConfirmationToken(UUID.randomUUID().toString());
         userregis.setCreateDate(ld);
         userregis.setCreateTime(lt);
         userregis.setUserType(UserType.ACTIVE.toString());
         Authorities ar = new Authorities();
-        ar.setAuthority("ROLE_USER");
+        ar.setAuthority("ROLE_CUSTOMER");
         ar.setUsername(profile.getUsername());
         userregis.setAuthorities(ar);
-
         userinforepository.save(userregis);
-
-//        String appUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getLocalPort() + "/api/login/confirm?token=" + userinfo.getUsers().getConfirmationToken();
-//        String from = "OreoMaster";
-//        String to = userinfo.getUsers().getUsername();
-//        String subject = "Meeting Oreo";
-//        EmailTemplate template = new EmailTemplate("email.html");
-//        Map<String, String> replacements = new HashMap<String, String>();
-//        replacements.put("user", userinfo.getUsers().getUsername());
-//        replacements.put("today", String.valueOf(new Date()));
-//        .put("verify", appUrl);
-//        String message = template.getTemplate(replacements);
-
-//        Email email = new Email(from, to, subject, message);
-//        email.setHtml(true);
-//        emailService.send(email);
         RestTemplate rt = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-//        JSONObject obj = new JSONObject();
-//        obj.put("username", userinfo.getUsers().getUsername());
-//        obj.put("phone", userinfo.getPhoneNumber());
-//        HttpEntity<String> entity = new HttpEntity<String>(obj.toString(), headers);
-//		BaseRestApi response = rt.postForObject( uri, entity , BaseRestApi.class );
-//		if(!response.isSuccess()){
-//        return brapi;
-//        } 
+        JSONObject obj = new JSONObject();
+        obj.put("payer", profile.getUsername());
+        obj.put("phone", profile.getPhone());
+        HttpEntity<String> entity = new HttpEntity<String>(obj.toString(), headers);
+		BaseRestApi response = rt.postForObject( uri, entity , BaseRestApi.class );
+		if(!response.isSuccess()){
+        return brapi;
+        } 
         brapi.setSuccess(true);
         return brapi;
     }
 
-    @RequestMapping(value = "/confirm", method = RequestMethod.GET)
-    public BaseRestApi confirmRegistration(@RequestParam("token") String token) {
-        BaseRestApi brapi = new BaseRestApi();
-        BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
-        Users tokencheck = userRepository.findByConfirmationToken(token);
-        if (tokencheck == null) {
-            resp.setErrorMessage(Helper.getMessage("token_error"));
-            brapi.setResponse(resp);
-            return brapi;
-        }
-        brapi.setSuccess(true);
-        return brapi;
-    }
-
-    @RequestMapping(value = "/confirmafter/checktoken", method = RequestMethod.POST)
-    public BaseRestApi confirmRegistrationPost(@RequestBody LoginDTO logindto, BindingResult bindingResult, @RequestParam("token") String token, RedirectAttributes redir) {
-        BaseRestApi brapi = new BaseRestApi();
-        BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
-        Users user = userRepository.findByConfirmationToken(token);
-        user.setEnabled(true);
-        user.getUserinfo().setUserType(UserType.ACTIVE.toString());
-        userRepository.save(user);
-        brapi.setSuccess(true);
-        return brapi;
-    }
 
 }

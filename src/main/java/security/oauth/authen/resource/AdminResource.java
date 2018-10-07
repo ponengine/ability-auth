@@ -62,8 +62,8 @@ public class AdminResource {
             return brapi;
 		 }
 	}
-		@PostMapping("/banuser")
-		public BaseRestApi banUser(ProfileDTO profile){
+		@PostMapping("/setstatususer")
+		public BaseRestApi setStatusUser(ProfileDTO profile){
 			 BaseRestApi brapi = new BaseRestApi();
 			 BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
 			 Users user = userRepository.findByUsername(profile.getUsername());
@@ -73,24 +73,8 @@ public class AdminResource {
 	             brapi.setResponse(resp);
 	            return brapi;
 	           }
-			 user.getUserinfo().setUserType(UserType.BLACKLIST.toString());
-			 brapi.setSuccess(true);
-			 return brapi;
-		 }
-		@PostMapping("/setinactive")
-		public BaseRestApi setinactive(ProfileDTO profile){
-			 BaseRestApi brapi = new BaseRestApi();
-			 BaseResponse<Map<String, Object>> resp = new BaseResponse<Map<String, Object>>();
-			 Users user = userRepository.findByUsername(profile.getUsername());
-			 if(user==null){
-	             brapi.setSuccess(false);
-	             resp.setErrorMessage(Helper.getMessage("user_not_found"));
-	             brapi.setResponse(resp);
-	            return brapi;
-	           }
-			 user.getUserinfo().setUserType(UserType.INACTIVE.toString());
-			 user.setEnabled(false);
-			 userRepository.save(user);
+			
+			 //user.getUserinfo().setUserType(userType);
 			 brapi.setSuccess(true);
 			 return brapi;
 		}

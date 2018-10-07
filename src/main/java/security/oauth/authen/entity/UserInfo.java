@@ -2,19 +2,17 @@ package security.oauth.authen.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +24,10 @@ import security.oauth.authen.config.LocalTimeAttributeConverter;
 @Entity
 @Table(name="w_user_info")
 public class UserInfo implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue
 	@Column(name="userinfo_id")
@@ -49,6 +51,8 @@ public class UserInfo implements Serializable{
 	@JoinColumn(name = "w_authorities_id")
 	private Authorities authorities;
 	
+	@Transient
+	private String typetran;
 	
 
 }
